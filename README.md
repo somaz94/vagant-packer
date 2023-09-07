@@ -26,7 +26,8 @@ vagrant plugin install vagrant-mutate
 vagrant plugin install vagrant-parallels
 ```
 
-## Options : Create a kvm-libirt pool for creating Vagrant VMs, save the /dev/sdb1 disk on the server
+## Options 
+Create a kvm-libirt pool for creating Vagrant VMs, save the /dev/sdb1 disk on the server
 
 ```bash
 mkfs.xfs /dev/sdb1
