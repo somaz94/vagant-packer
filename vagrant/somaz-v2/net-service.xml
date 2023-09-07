@@ -1,0 +1,19 @@
+<network connections='3' ipv6='no'>
+  <name>service</name>
+  <forward mode='nat'>
+    <nat>
+      <port start='1024' end='65535'/>
+    </nat>
+  </forward>
+  <ip address='192.168.121.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='192.168.121.1' end='192.168.121.254'/>
+      <host mac='52:54:00:3f:2a:a1' ip='192.168.121.11'/>
+      <host mac='52:54:00:3f:2a:a2' ip='192.168.121.12'/>
+      <host mac='52:54:00:3f:2a:a3' ip='192.168.121.13'/>
+      <host mac='52:54:00:3f:2a:b1' ip='192.168.121.101'/>
+      <host mac='52:54:00:3f:2a:b2' ip='192.168.121.102'/>
+      <host mac='52:54:00:3f:2a:c1' ip='192.168.121.201'/>
+    </dhcp>
+  </ip>
+</network>

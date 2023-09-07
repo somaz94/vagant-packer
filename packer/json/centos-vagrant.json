@@ -1,0 +1,57 @@
+{
+    "variables": {
+        "cpu": "2",
+        "ram": "2048",
+        "user": "vagrant",
+        "password": "vagrant",
+        "disk_size": "5000"
+    },
+
+    "builders":
+    [
+        {
+            "name": "centos-os-2.0.7",
+            "type": "qemu",
+            "format": "raw",
+            "accelerator": "kvm",
+            "disk_size": "{{ user `disk_size`}}",
+            "qemu_binary": "/usr/libexec/qemu-kvm",
+            "iso_url": "/var/lib/libvirt/images/CentOS-7-x86_64-Minimal-2009.iso",
+            "iso_checksum": "md5:a4711c4fa6a1fb32bd555fae8d885b12",
+            "http_directory": "http",
+            "ssh_username": "{{user `user`}}",
+            "ssh_password": "{{user `password`}}",
+            "ssh_wait_timeout": "10m",
+            "output_directory": "output",
+            "vm_name": "centos-os-2.0.7",
+            "net_device": "virtio-net",
+            "vnc_bind_address": "0.0.0.0",
+            "qemuargs": [[ "-m", "{{user `ram`}}M" ],[ "-smp", "{{user `cpu`}}" ]],
+            "disk_interface": "virtio",
+            "shutdown_command": "echo '{{user `password`}}'|sudo -S shutdown -P now",
+            "boot_wait": "10s",
+            "boot_command": [
+               "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-ks.cfg<enter><wait>"   
+            ]
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts": [
+                "scripts/vagrant.sh",
+                "scripts/cleanup.sh"
+            ]
+        }
+    ],
+
+    "post-processors": [
+        {
+            "keep_input_artifact": false,
+            "output": "box/centos-os-2.0.7_raw.box",
+            "type": "vagrant"
+        }
+    ]
+}

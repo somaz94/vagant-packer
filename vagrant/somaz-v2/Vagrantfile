@@ -1,0 +1,152 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+  Control = 3 # max number of contrl nodes
+  Compute = 2 # max number of compute nodes
+  Ceph = 1 # max number of ceph nodes
+  Ver = '0.0.4' # CloudPC-Edu Version
+
+config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  #==============#
+  # ControlNodes #
+  #==============#
+
+  (1..Control).each do |i|
+    config.vm.define "control0#{i}" do |cfg|
+      cfg.vm.box = "somaz-os-2.0.7"
+      cfg.vm.provider "libvirt" do |vb|
+        vb.cpus = 8
+        vb.memory = 98304
+        vb.management_network_name = "service"
+        vb.management_network_mac = "52:54:00:3f:2a:a#{i}"
+        vb.storage_pool_name = "vagrant"
+        vb.machine_virtual_size = 500
+        vb.graphics_ip = "0.0.0.0"
+      end
+      cfg.vm.host_name = "control0#{i}"
+      cfg.vm.network "private_network", ip: "192.168.20.1#{i}",
+        libvirt__network_name: "mgmt",
+        libvirt__forward_mode: "none",
+        libvirt__dhcp_enabled: "false"
+      cfg.vm.network "private_network", ip: "192.168.30.1#{i}",
+        libvirt__network_name: "tenant",
+        libvirt__forward_mode: "none",
+        libvirt__dhcp_enabled: "false"
+      cfg.vm.network "private_network", ip: "10.10.40.1#{i}",
+        auto_config: false,
+        libvirt__network_name: "provider",
+        libvirt__dhcp_enabled: "false"
+      cfg.vm.network "private_network", ip: "192.168.50.1#{i}",
+        libvirt__network_name: "storage",
+        libvirt__forward_mode: "none",
+        libvirt__dhcp_enabled: "false"
+        #libvirt__mtu: "9000"
+      cfg.vm.network "private_network", ip: "10.10.60.1#{i}",
+        auto_config: false,
+        libvirt__network_name: "ceph-cluster",
+        libvirt__forward_mode: "none",
+        libvirt__dhcp_enabled: "false"
+      cfg.vm.network "forwarded_port", guest: 22, host: "6001#{i}", host_ip: "127.0.0.1"
+      cfg.vm.provision "shell", path: "edu_init.sh", args: [Control, Compute, Ceph]
+    end
+  end
+
+  #================#
+  # Comopute Nodes #
+  #================#
+
+  (1..Compute).each do |i|
+    config.vm.define "compute0#{i}" do |cfg|
+      cfg.vm.box = "somaz-os-2.0.7"
+      cfg.vm.provider "libvirt" do |vb|
+        vb.cpus = 16
+        vb.memory = 32768
+        vb.nested = true
+        vb.cpu_mode = "host-passthrough"
+        vb.management_network_name = "service"
+        vb.management_network_mac = "52:54:00:3f:2a:b#{i}"
+        vb.storage_pool_name = "vagrant"
+        vb.graphics_ip = "0.0.0.0"
+      end
+      cfg.vm.host_name = "compute0#{i}"
+      cfg.vm.network "private_network", ip: "192.168.20.10#{i}",
+        libvirt__network_name: "mgmt"
+      cfg.vm.network "private_network", ip: "192.168.30.10#{i}",
+        libvirt__network_name: "tenant"
+      cfg.vm.network "private_network", ip: "10.10.40.10#{i}",
+        auto_config: false,
+        libvirt__network_name: "provider"
+      cfg.vm.network "private_network", ip: "192.168.50.10#{i}",
+        libvirt__network_name: "storage"
+        #libvirt__mtu: "9000"
+      cfg.vm.network "private_network", ip: "10.10.60.10#{i}",
+        libvirt__network_name: "ceph-cluster",
+        auto_config: false
+      cfg.vm.network "forwarded_port", guest: 22, host: "6010#{i}", host_ip: "127.0.0.1"
+      cfg.vm.provision "shell", path: "edu_init.sh", args: [Control, Compute, Ceph]
+    end
+  end
+
+  #============#
+  # Ceph Nodes #
+  #============#
+
+  (1..Ceph).each do |i|
+    config.vm.define "ceph0#{i}" do |cfg|
+      cfg.vm.box = "somaz-os-2.0.7"
+      cfg.vm.provider "libvirt" do |vb|
+        vb.cpus = 8
+        vb.memory = 32768
+        vb.management_network_name = "service"
+        vb.management_network_mac = "52:54:00:3f:2a:c#{i}"
+        vb.storage :file, :device => 'sdb', :size => '300G'
+        vb.storage :file, :device => 'sdc', :size => '300G'
+        vb.storage :file, :device => 'sdd', :size => '300G'
+        vb.storage_pool_name = "vagrant"
+        vb.graphics_ip = "0.0.0.0"
+      end
+      cfg.vm.host_name = "ceph0#{i}"
+      cfg.vm.network "private_network", ip: "192.168.20.20#{i}",
+        libvirt__network_name: "mgmt"
+      cfg.vm.network "private_network", ip: "192.168.30.20#{i}",
+        libvirt__network_name: "tenant",
+        auto_config: false
+      cfg.vm.network "private_network", ip: "10.10.40.20#{i}",
+        auto_config: false,
+        libvirt__network_name: "provider"
+      cfg.vm.network "private_network", ip: "192.168.50.20#{i}",
+        libvirt__network_name: "storage"
+        #libvirt__mtu: "9000"
+      cfg.vm.network "private_network", ip: "192.168.60.20#{i}",
+        libvirt__network_name: "ceph-cluster"
+        #libvirt__mtu: "9000"
+      cfg.vm.network "forwarded_port", guest: 22, host: "6020#{i}", host_ip: "127.0.0.1"
+      cfg.vm.provision "shell", path: "edu_init.sh", args: [Control, Compute, Ceph]
+    end
+  end
+
+
+  #==============#
+  # CentOS7-GUI  #
+  #==============#
+
+#    config.vm.define "centos7-gui" do |cfg|
+#      cfg.vm.box = "centos7-gui"
+#      cfg.vm.provider "libvirt" do |vb|
+#        vb.cpus = 4
+#        vb.memory = 8192
+#        vb.management_network_name = "service"
+#        vb.storage_pool_name = "vagrant"
+#      end
+#      cfg.vm.host_name = "centos7-gui"
+#      cfg.vm.network "private_network", ip: "192.168.20.5",
+#        libvirt__network_name: "mgmt"
+#      cfg.vm.network "forwarded_port", guest: 5910, host: "5910", host_ip: "0.0.0.0"
+#      cfg.vm.provision "shell", path: "vnc_init.sh", args: [Control, Compute, Ceph]
+#    end
+ 
+end
