@@ -10,7 +10,7 @@
     "builders":
     [
         {
-            "name": "centos-os-2.0.7",
+            "name": "centos-os-0.0.1",
             "type": "qemu",
             "format": "raw",
             "accelerator": "kvm",
@@ -23,7 +23,7 @@
             "ssh_password": "{{user `password`}}",
             "ssh_wait_timeout": "10m",
             "output_directory": "output",
-            "vm_name": "centos-os-2.0.7",
+            "vm_name": "centos-os-0.0.1",
             "net_device": "virtio-net",
             "vnc_bind_address": "0.0.0.0",
             "qemuargs": [[ "-m", "{{user `ram`}}M" ],[ "-smp", "{{user `cpu`}}" ]],
@@ -50,7 +50,7 @@
     "post-processors": [
         {
             "keep_input_artifact": false,
-            "output": "box/centos-os-2.0.7_raw.box",
+            "output": "box/centos-os-0.0.1_raw.box",
             "type": "vagrant"
         }
     ]
