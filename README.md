@@ -69,5 +69,6 @@ sudo apt update && sudo apt install packer
 ## Reference
 - [Vagrant Install](https://developer.hashicorp.com/vagrant/downloads?product_intent=vagrant)
 - [Packer Install](https://developer.hashicorp.com/packer/downloads)
+- [Packer Migrate to HCL2](https://developer.hashicorp.com/packer/tutorials/configuration-language/hcl2-upgrade)
 - [Enable Netsted](https://ostechnix.com/how-to-enable-nested-virtualization-in-kvm-in-linux/)
 
