@@ -4,7 +4,8 @@
         "source_image_family": "ubuntu-2004-lts",
         "zone": "asia-northeast3-a", 				
         "machine_type": "n1-standard-1", 			
-        "account_file": "~/.ssh/somaz-key.json" 
+        "account_file": "/home/somaz/.ssh/somaz-key.json",
+        "password" : "somaz@2023"
     },
 
     "builders": [

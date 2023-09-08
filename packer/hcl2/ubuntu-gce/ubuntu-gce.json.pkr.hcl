@@ -27,7 +27,7 @@ packer {
 # https://www.packer.io/docs/templates/hcl_templates/variables#type-constraints for more info.
 variable "account_file" {
   type    = string
-  default = "~/.ssh/somaz-key.json"
+  default = "/home/somaz/.ssh/somaz.json"
 }
 
 variable "machine_type" {
@@ -48,6 +48,11 @@ variable "source_image_family" {
 variable "zone" {
   type    = string
   default = "asia-northeast3-a"
+}
+
+variable "password" {
+  type    = string
+  default = "somaz@2023"
 }
 
 # "timestamp" template function replacement

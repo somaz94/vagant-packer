@@ -50,6 +50,11 @@ variable "user" {
   default = "ec2-user"
 }
 
+variable "password" {
+  type    = string
+  default = "somaz@2023"
+}
+
 # The amazon-ami data block is generated from your amazon builder source_ami_filter; a data
 # from this block can be referenced in source and locals blocks.
 # Read the documentation for data blocks here:
