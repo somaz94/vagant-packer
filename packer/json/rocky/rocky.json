@@ -41,8 +41,8 @@
             "type": "shell",
             "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
             "scripts": [
-                "rocky-scripts/vagrant.sh",
-                "rocky-scripts/cleanup.sh"
+                "scripts/vagrant.sh",
+                "scripts/cleanup.sh"
             ]
         }
     ],

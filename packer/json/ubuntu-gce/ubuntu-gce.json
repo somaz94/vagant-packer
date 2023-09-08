@@ -1,0 +1,40 @@
+{
+    "variables": {
+        "project_id": "somaz", 					
+        "source_image_family": "ubuntu-2004-lts",
+        "zone": "asia-northeast3-a", 				
+        "machine_type": "n1-standard-1", 			
+        "account_file": "~/.ssh/somaz-key.json" 
+    },
+
+    "builders": [
+        {
+            "type": "googlecompute",
+            "project_id": "{{user `project_id`}}",
+            "source_image_family": "{{user `source_image_family`}}",
+            "zone": "{{user `zone`}}",
+            "machine_type": "{{user `machine_type`}}",
+            "ssh_username": "ubuntu",
+            "image_name": "ubuntu-golden-image-{{timestamp}}",
+            "image_description": "Ubuntu Golden Image",
+            "disk_type": "pd-ssd",
+            "disk_size": "10",
+            "network": "default",
+            "subnetwork": "default",
+            "tags": ["ubuntu", "golden-image"],
+            "use_internal_ip": false,
+            "account_file": "{{user `account_file`}}"
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo '{{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts": [
+                "scripts/ubuntu-setup.sh"
+            ]
+        }
+    ]
+}
+

@@ -1,0 +1,44 @@
+{
+    "variables": {
+        "cpu": "2",
+        "ram": "2048",
+        "user": "ec2-user",
+        "region": "ap-northeast-2",
+        "instance_type": "t2.micro"
+    },
+
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "region": "{{user `region`}}",
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "amzn2-ami-hvm-*-x86_64-gp2",
+                    "root-device-type": "ebs"
+                },
+                "owners": ["amazon"],
+                "most_recent": true
+            },
+            "instance_type": "{{user `instance_type`}}",
+            "ssh_username": "{{user `user`}}",
+            "ami_name": "amazon-linux2-golden-image {{timestamp}}",
+            "ssh_interface": "public_ip",
+            "force_deregister": true,
+            "tags": {
+                "Name": "Amazon Linux 2 Golden Image"
+            }
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "execute_command": "echo ' {{user `password`}}' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+            "scripts": [
+                "scripts/package.sh"
+            ]
+        }
+    ]
+}
+
