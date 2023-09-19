@@ -12,7 +12,7 @@ This repository provides a collection of setup and configuration scripts for Vag
 
 <br/>
 
-#### CentOS/RHEL:
+### CentOS/RHEL:
 ```bash
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
@@ -22,7 +22,7 @@ vagrant plugin install vagrant libvirt
 vagrant plugin install vagrant-mutate
 vagrant plugin install vagrant-parallels
 ```
-#### Ubuntu/Debian:
+### Ubuntu/Debian:
 ```bash
 # Ubuntu/Debian
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
@@ -59,13 +59,13 @@ virsh pool-list --all
 
 <br/>
 
-#### CentOS/RHEL:
+### CentOS/RHEL:
 ```bash
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 sudo yum -y install packer
 ```
-#### Ubuntu/Debian:
+### Ubuntu/Debian:
 ```bash
 wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
