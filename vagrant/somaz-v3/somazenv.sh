@@ -2,7 +2,7 @@
 
 function _base_show_usage() {
   echo ""
-  echo -e "Usage: eduenv.sh <command> [arg]\n"
+  echo -e "Usage: somazenv.sh<command> [arg]\n"
   echo -e "Commands:"
   echo -e "  status    Outputs status of VM Server"
   echo -e "  start     Create trainning VM Server and Start up"
