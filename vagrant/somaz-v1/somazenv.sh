@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function _base_show_usage() {
   echo ""
